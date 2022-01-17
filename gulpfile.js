@@ -13,7 +13,7 @@ function cssCompile(done){
 		.pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
 		.pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
 		.pipe(cleanCSS())
-		.pipe(dest('./public_html'));
+		.pipe(dest('./docs'));
 	done();
 };
 
@@ -24,7 +24,7 @@ function jsMinify(done){
 		])
 		.pipe(preprocess())
 		.pipe(uglify())
-		.pipe(dest('./public_html'));
+		.pipe(dest('./docs'));
 	done();
 };
 
@@ -32,12 +32,12 @@ function jsMinify(done){
 function cache(done) {
 	src([
 			'./src/*.html',
-			'!./public_html/*.html'
+			'!./docs/*.html'
 		])
 		.pipe(preprocess())
 		.pipe(replace('.css"','.css?' + new Date().getTime() + '"'))
 		.pipe(replace('.js"','.js?' + new Date().getTime() + '"'))
-		.pipe(dest('./public_html'));
+		.pipe(dest('./docs'));
 	done();
 };
 
