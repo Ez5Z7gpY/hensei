@@ -1,5 +1,4 @@
 .DS_Store
 *node_modules
 *.vscode
-/public_html*
 /_public_html*
