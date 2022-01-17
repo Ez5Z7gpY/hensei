@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="/style.css?1642388203435">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js?1642388203435" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
+	<script src="/main.js?1642388203435" defer></script>
+</head>
+<body>	
+<div class="l-main">
+	<div class="c-ac">
+		<button class="c-ac__btn js-ac-btn">
+			画像アップロード
+		</button>
+		<div class="c-ac__cnt js-ac-cnt">
+			<div class="sec-input">
+				<div class="input-radio">
+					<input type="radio" name="type" id="normal" value="normal" checked><label for="normal">通常艦隊</label>
+				</div>
+				<div class="input-radio">
+					<input type="radio" name="type" id="combined" value="combined"><label for="combined">連合艦隊</label>
+				</div>
+				<div class="input-radio">
+					<input type="radio" name="type" id="flying_s" value="flying_s"><label for="flying_s">遊撃艦隊</label>
+				</div>
+			</div>
+
+			<div class="sec-input">
+				<div class="input-form"><input type="file" name="file" id="file" multiple><label for="file">ファイルを選択</label></div>
+				<div class="input-set"></div>
+			</div>
+		</div>
+	</div>
+	<div class="c-ac">
+		<button class="c-ac__btn js-ac-btn">
+			切り取り指定<span class="last-setting">【前回指定】<span class="js-last-setting"></span></span>
+		</button>
+		<div class="c-ac__cnt js-ac-cnt">
+			<canvas id="canvas"></canvas>
+			<p class="js-setting"></p>
+		</div>
+	</div>
+	<button type="submit" class="c-btn js-btn-generate">画像生成</button>
+	<canvas id="generate"></canvas>
+</div>
+</body>
+</html>
