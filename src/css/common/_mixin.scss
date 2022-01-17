@@ -1,0 +1,26 @@
+
+// 画面幅
+@mixin pc($num: 768) {
+	@media only screen and (min-width: #{$num}px) {
+		@content;
+	}
+}
+@mixin sp($num: 767) {
+	@media only screen and (max-width: #{$num}px) {
+		@content;
+	}
+}
+@mixin ratina {
+	@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+		@content;
+	}
+}
+
+// トランジション
+@mixin trs($prop: all, $time: .3s, $ease: ease, $delay: 0s) {
+	transition: $prop $time $ease $delay;
+}
+
+
+$cyan: #4bb4eb;
+$pink: #fc5774;
