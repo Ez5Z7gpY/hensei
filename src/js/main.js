@@ -43,7 +43,6 @@
 				case 'normal':
 					file_max = 6;
 					$('.input-preview:nth-child(-n+6)').show();
-					console.log(mode);
 				break;
 				case 'combined':
 					file_max = 12;
@@ -116,62 +115,57 @@
 		let canvas_ctx = canvas.getContext("2d");
 		
 		let image = document.getElementById('img0');
-		canvas.width = image.naturalWidth;
-		canvas.height = image.naturalHeight;
-		
-		canvas_ctx.drawImage(image,0,0);
 
-		$('#canvas').on('mousedown', function(event){
+		let ratio;
+		image.onload = function(){
+			ratio = image.naturalWidth/(window.innerWidth*0.9);
+			let long = Math.max(image.width, image.height);
+			let short = Math.min(image.width, image.height);
+			let proportion = short * 100 / long;
+			canvas.width = window.innerWidth*0.9;
+			canvas.height = window.innerWidth*0.9*proportion/100;
+			canvas_ctx.drawImage(image,0,0,image.naturalWidth,image.naturalHeight,0,0,canvas.width,canvas.height);
+		};
+
+
+		canvas.addEventListener('mousedown', function(event){
 			rect_MousedownFlg = true;
 
 			// 座標を求める
 			let rect = event.target.getBoundingClientRect();
-			rect_sx = rect_ex = event.clientX - rect.left;
-			rect_sy = rect_ey = event.clientY - rect.top;
+			rect_sx = event.clientX - rect.left;
+			rect_sy = event.clientY - rect.top;
+
 
 			// 線の設定
-			canvas_ctx.lineWidth = 1;
+			canvas_ctx.lineWidth = 2;
+			canvas_ctx.strokeStyle = '#f08300';
 			canvas_ctx.setLineDash([2, 3]);
 		});
 	
-		$('#canvas').on('mousemove', function(event){
+		canvas.addEventListener('mousemove', function(event){
 			if(rect_MousedownFlg){
 				// 座標を求める
 				let rect = event.target.getBoundingClientRect();
-				rect_ex = event.clientX - rect.left;
-				rect_ey = event.clientY - rect.top;
+				rect_ex = event.offsetX - rect_sx;
+				rect_ey = event.offsetY - rect_sy;
 				
 				// 元画像の再描画
-				canvas_ctx.drawImage(image,0,0);
+				canvas_ctx.drawImage(image,0,0,image.naturalWidth,image.naturalHeight,0,0,canvas.width,canvas.height);
 				
 				// 矩形の描画
 				canvas_ctx.beginPath();
 				
-				// 上
-				canvas_ctx.moveTo(rect_sx,rect_sy);
-				canvas_ctx.lineTo(rect_ex,rect_sy);
-				
-				// 下
-				canvas_ctx.moveTo(rect_sx,rect_ey);
-				canvas_ctx.lineTo(rect_ex,rect_ey);
-				
-				// 右
-				canvas_ctx.moveTo(rect_ex,rect_sy);
-				canvas_ctx.lineTo(rect_ex,rect_ey);
-				
-				// 左
-				canvas_ctx.moveTo(rect_sx,rect_sy);
-				canvas_ctx.lineTo(rect_sx,rect_ey);
-				
-				canvas_ctx.stroke();
+
+				canvas_ctx.strokeRect(rect_sx,rect_sy,rect_ex,rect_ey);
 			}
 		});
 
-		$('#canvas').on('mouseup', function(event){
+		canvas.addEventListener('mouseup', function(event){
 			// キャンバスの範囲外は無効にする
 			if(rect_sx === rect_ex && rect_sy === rect_ey){
 				// 初期化
-				canvas_ctx.drawImage(image,0,0);
+				canvas_ctx.drawImage(image,0,0,image.naturalWidth,image.naturalHeight,0,0,canvas.width,canvas.height);
 				rect_sx = rect_ex = 0;
 				rect_sy = rect_ey = 0;
 			}
@@ -179,10 +173,10 @@
 			// 矩形の画像を取得する
 			if(rect_MousedownFlg){
 				// 矩形用キャンバスへ画像の転送
-				source['sx'] = Math.min(rect_sx,rect_ex);
-				source['sy'] = Math.min(rect_sy,rect_ey);
-				source['sw'] = Math.max(rect_sx - rect_ex,rect_ex - rect_sx);
-				source['sh'] = Math.max(rect_sy - rect_ey ,rect_ey - rect_sy);
+				source['sx'] = rect_sx*ratio;
+				source['sy'] = rect_sy*ratio;
+				source['sw'] = rect_ex*ratio;
+				source['sh'] = rect_ey*ratio;
 				let setting = '';
 					setting += '横幅：'+source.sw;
 					setting += '　高さ：'+source.sh;

@@ -6,9 +6,11 @@ const cleanCSS = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 const replace = require('gulp-replace');
 const preprocess = require('gulp-preprocess');
+const browserSync = require('browser-sync');
+
 
 // sass
-function cssCompile(done){
+const cssCompile = (done) => {
 	src('./src/css/*.scss')
 		.pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
 		.pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
@@ -18,7 +20,7 @@ function cssCompile(done){
 };
 
 // js minify
-function jsMinify(done){
+const jsMinify = (done) => {
 	src([
 			'./src/js/**.js',
 		])
@@ -29,7 +31,7 @@ function jsMinify(done){
 };
 
 // キャッシュ
-function cache(done) {
+const cache = (done) => {
 	src([
 			'./src/*.html',
 			'!./docs/*.html'
@@ -41,12 +43,27 @@ function cache(done) {
 	done();
 };
 
-// ビルド
-exports.build = series(jsMinify, cssCompile, cache);
+const browser_sync = (done) => {
+	browserSync.init({
+	  server: {
+		baseDir: './docs',
+		index: 'index.html'
+	  },
+	  port: 3000
+	});
+};
 
-// 動作設定
-exports.default = function() {
+const watching = (done) => {
 	watch('./src/css/**/*.scss', series(cssCompile, cache));
 	watch('./src/js/*.js', series(jsMinify, cache));
 	watch('./src/*.html', series(cache));
+    done();
 };
+
+const build = series(jsMinify, cssCompile, cache);
+
+// ビルド
+exports.build = build;
+
+// 動作設定
+exports.default = series(build, watching, browser_sync);
