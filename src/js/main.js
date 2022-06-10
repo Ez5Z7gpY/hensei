@@ -128,7 +128,7 @@
 		};
 
 
-		canvas.addEventListener('mousedown', function(event){
+		canvas.addEventListener('touchstart', function(event){
 			rect_MousedownFlg = true;
 
 			// 座標を求める
@@ -143,7 +143,7 @@
 			canvas_ctx.setLineDash([2, 3]);
 		});
 	
-		canvas.addEventListener('mousemove', function(event){
+		canvas.addEventListener('touchmove', function(event){
 			if(rect_MousedownFlg){
 				// 座標を求める
 				let rect = event.target.getBoundingClientRect();
@@ -161,7 +161,7 @@
 			}
 		});
 
-		canvas.addEventListener('mouseup', function(event){
+		canvas.addEventListener('touchend', function(event){
 			// キャンバスの範囲外は無効にする
 			if(rect_sx === rect_ex && rect_sy === rect_ey){
 				// 初期化
